@@ -41,6 +41,6 @@ Navigation is provided to guide users to temples.
       Open index.html in your browser.
   
 # Contributors
-  -Nithil P(https://github.com/nithil286)
-  -Thomas Amala Heringston A(https://github.com/heringston)
+  -Nithil P(https://github.com/nithil286),
+  -Thomas Amala Heringston A(https://github.com/heringston),
   -Sanjay G(https://github.com/sanjay-042006)
