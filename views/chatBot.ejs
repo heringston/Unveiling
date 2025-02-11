@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hindu Temple Chatbot</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <body>
+      <div id="google_translate_element"></div>
+      <style>
+          /* Hide the Google Translate container initially */
+          #google_translate_element {
+              display: none;
+          }
+      </style>
+      <script type="text/javascript">
+          function googleTranslateElementInit() {
+              new google.translate.TranslateElement({
+                  pageLanguage: 'en',
+                  autoDisplay: false
+              }, 'google_translate_element');
+  
+              // Hide the translation toolbar after it's loaded
+              setTimeout(function() {
+                  const iframe = document.querySelector('iframe.skiptranslate');
+                  if (iframe) {
+                      iframe.style.display = 'none';
+                  }
+              }, 1000); // Delay to ensure the iframe is loaded
+          }
+      </script>
+      <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  </body>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        background-color: #f4f4f4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      #chat-container {
+        width: 80%;
+        max-width: 600px;
+        margin: 20px auto;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow-y: auto;
+        max-height: 500px;
+        padding: 10px;
+        flex-grow: 1;
+        background: linear-gradient(
+            rgba(39, 40, 92, 0.7),
+            rgb(200, 225, 219, 0.7)
+          ),
+          url("search_image.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .message {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        clear: both;
+      }
+
+      .user-message {
+        background-color: #e0f2f7;
+        float: right;
+      }
+
+      .bot-message {
+        background-color: #fff;
+        float: left;
+      }
+
+      #input-area {
+        width: 80%;
+        max-width: 600px;
+        margin: 10px auto;
+        display: flex;
+      }
+
+      #user-input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      #send-button {
+        padding: 10px 15px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+
+      @media (max-width: 500px) {
+        #chat-container,
+        #input-area {
+          width: 95%;
+        }
+      }
+      #chat-heading {
+        font-size: 28px;
+        font-weight: bold;
+        color: #4a148c; /* Deep Purple Color */
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 id="chat-heading">🔱 Ask About Hindu Temples and Traditions</h2>
+    <div id="chat-container"></div>
+
+    <div id="input-area">
+      <input
+        type="text"
+        id="user-input"
+        placeholder="Ask about Hindu Temples..."
+      />
+      <button id="send-button" onclick="sendMessage()">Send</button>
+    </div>
+    <script>
+      const chatContainer = document.getElementById("chat-container");
+      const userInput = document.getElementById("user-input");
+      const geminiApiKey = "AIzaSyDkGgG29nSjj23ivqeJg7SmrHvCt2Vubw4"; // **YOUR API KEY**
+
+      async function sendMessage() {
+        const userMessage = userInput.value;
+        displayMessage(userMessage, "user");
+        userInput.value = "";
+
+        try {
+          const botResponse = await getGeminiResponse(userMessage);
+          displayMessage(botResponse, "bot");
+        } catch (error) {
+          console.error("Error calling Gemini API:", error);
+          displayMessage(
+            "Sorry, I'm having trouble connecting right now.",
+            "bot"
+          );
+        }
+      }
+
+      function displayMessage(message, sender) {
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("message", `${sender}-message`);
+        messageDiv.textContent = message;
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      async function getGeminiResponse(userMessage) {
+        // Keywords related to Hindu temples
+        const hinduTempleKeywords = [
+          "temple",
+          "Hindu",
+          "god",
+          "goddess",
+          "prayer",
+          "festival",
+          "puja",
+          "mandir",
+          "prasad",
+          "archana",
+          "shrine",
+          "deity",
+          "aarti",
+          "yatra",
+          "tirtha",
+          "abhishekam",
+          "darshan",
+          "sacred",
+          "ritual",
+          "hi",
+          "hello",
+          "greetings",
+        ];
+
+        // Convert user message to lowercase and check if it contains any relevant keywords
+        const isRelevant = hinduTempleKeywords.some((keyword) =>
+          userMessage.toLowerCase().includes(keyword)
+        );
+
+        if (!isRelevant) {
+          return "Invalid prompt. Please ask about Hindu temples.";
+        }
+
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
+
+        const requestBody = {
+          contents: [{ parts: [{ text: userMessage }] }],
+        };
+
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            `Gemini API error: ${response.status} - ${errorData.error.message}`
+          );
+        }
+
+        const data = await response.json();
+        return data.candidates[0].content.parts[0].text;
+      }
+
+      userInput.addEventListener("keyup", function (event) {
+        if (event.key === "Enter") {
+          sendMessage();
+        }
+      });
+    </script>
+  </body>
+</html>

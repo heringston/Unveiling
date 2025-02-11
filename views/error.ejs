@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <style>
+        h1{
+            color:  #27285C;
+
+        }
+        body{
+            background-color: rgb(200, 225, 219);
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            height: 100vh;
+            width: 100%;
+
+        }
+        a{
+            text-decoration: none;
+            font-size: larger;
+            color: rgb(200, 225, 219);
+            background-color: #27285C;
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+            border-radius: 10px;
+            border: 1px solid #27285C;
+            transition-duration: 0.2s;
+        }
+        a:hover{
+            background-color: rgb(200, 225, 219);
+            color: #27285C;
+        }
+    </style>
+</head>
+<body>
+    <h1><%= msg %> !</h1>
+    <a href="/home">Back to Homepage</a>
+    <a href="/signin">Sign In</a>
+    <a href="/signup">Sign Up</a>
+</body>
+</html>

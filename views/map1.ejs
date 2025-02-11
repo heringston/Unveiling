@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<div class="div">
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/3d39a7913e.js" crossorigin="anonymous"></script>
+    <script src="d.js"></script>
+    <title>Trichy Ancient Temples Map (OSM)</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" /> <!-- Add this line -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <body>
+        <div id="google_translate_element"></div>
+        <style>
+            /* Hide the Google Translate container initially */
+            #google_translate_element {
+                display: none;
+            }
+        </style>
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    autoDisplay: false
+                }, 'google_translate_element');
+    
+                // Hide the translation toolbar after it's loaded
+                setTimeout(function() {
+                    const iframe = document.querySelector('iframe.skiptranslate');
+                    if (iframe) {
+                        iframe.style.display = 'none';
+                    }
+                }, 1000); // Delay to ensure the iframe is loaded
+            }
+        </script>
+        <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </body>
+    <style>
+        #map { height: 500px; width: 100%; }
+        .leaflet-routing-container {
+            background: white;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>TEMPLES IN TRICHY</h2>
+    <div id="map"></div>
+    <button class="but" ><a style="text-decoration: none;color:rgb(200, 225, 219); " href="sample.html">Rating&#9733;</a></button>
+    <div class="image">
+        <img class="om" src="om.png" height="30px" width="30px">
+        <h4>popular</h4>
+        <img class="temple" src="temple.png" height="30px" width="30px">
+        <h4>unpopular</h4>
+        </div>
+    <script>
+        var map = L.map('map').setView([10.7905, 78.7047], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var temples = [
+            { name: "Ucchi Pillayar Rockfort Temple", lat: 10.8278, lng: 78.6926 },
+            { name: "Sri Ranganathaswamy Temple", lat: 10.8622, lng: 78.6870 },
+            { name: "Jambukeswarar Temple", lat: 10.8531, lng: 78.7051 },
+            { name: "Erumbeeswarar Temple", lat: 10.8116, lng: 78.6833 },
+            { name: "Vayalur Murugan Temple", lat: 10.7748, lng: 78.6563 },
+            { name: "Brahmapureeswarar Temple", lat: 11.2400, lng: 79.6273 },
+            { name: "Vekkali Amman Temple", lat: 10.8125, lng: 78.6714 },
+            { name: "Neelivaneswarar Temple", lat: 10.9672, lng: 78.0394 },
+            { name: "Prasanna Venkatachalapathy Temple", lat: 10.7983, lng: 78.6867 },
+            { name: "Sri Kumkumavalli sametha Thanthondreeswarar Temple", lat: 10.8247, lng: 78.6766 },
+            {name: "Arulmigu kamalavalli Nachiyar Temple", lat: 10.834049846763264,lng:  78.67082720585181},
+            {name: "Arulmigu Thiru Uyyakondan Thirumalai UjjevaNathar swamy Temple", lat: 10.82089863064967, lng: 78.65812426463145},
+            {name: "Vayalur Arulmigu Murugan Saamy Temple Tiruchirappalli", lat: 10.833038235254934,lng: 78.62310534559155},
+            {name: "Panchavarneswarar Temple Uraiyur", lat: 10.836747460740368 ,lng: 78.6756337241514},
+            {name: "Sri Boologa Nathar Thirukovil", lat: 10.825956859013854,lng: 78.70069628385644},
+            {name: "Sri Ayyappan Temple", lat: 10.812130832643811, lng:78.67769366056552 },
+            {name: "Kaattu Azhagiya Singar Temple, Srirangam", lat: 10.866419608588718, lng:78.698979670178 },
+            {name: "Kariyamaleswarar Temple & Vishnu Durgai Amman Temple", lat: 10.860013371521738, lng:78.69726305649958 },
+            {name: "Arulmigu Bhoominathaswamy Temple", lat: 10.91260787479486, lng:78.70172625206348 },
+            {name: "Arulmigu Uthamar Kovil", lat: 10.884799680963123, lng:78.70469048328998},
+            {name: "Shri Shiva Temple - Shri Kailasanathar Periyanayagi", lat:10.81752643098507,  lng:78.67151385132318},
+            {name: "Shiva: Thaanthondreeswarar and Kungumavalli Ambal", lat:10.83506145485344,  lng:78.68112688792237},
+            {name: "Vazhividu VelMurugan Temple", lat:10.802688302071484,  lng:78.68215685612942},
+            {name: "Arulmigu Sri Saptharishishwarar Temple, Lalgudi", lat:10.876495639510294,  lng:78.82184810602563},
+            {name: "Amman Temple", lat:10.772746041398339,  lng:78.69480327423268},
+            {name: "Vellai Gopuram", lat:10.87165069795762,  lng:78.68924096018414},
+            {name: "Aayiram Kaal Mandapam (1000 stone pillars mandapam)", lat:10.868953399015412,  lng:78.69370415574804},
+            {name: "Varahi Amman Temple in Trichy", lat:10.840967484859982,  lng:78.66108849585792},
+            {name: "Sri Gneeliwaneshwarar Temple, Padal Petra Temple", lat:10.940086482232969,  lng:78.64014580898113},
+            {name: "Cholingapurieswarar Temple", lat:10.828960821694443,  lng:78.67886823000907},
+            {name: "Hanuman Temple, Kallukizhi", lat:10.80063392774911,  lng:78.69054120302236},
+            {name: "Lalitankura Cave Temple (Upper Caves)", lat:10.835530522143351,  lng:78.6991793287613},
+            {name: "Perumal Kovil", lat: 10.833507305714775, lng:78.67686335094176},
+            {name:"Sri Thayumanavar Temple",lat:10.828664113808387, lng:78.69622089999774}
+        ];  
+
+        var userMarker, routeControl, nearestTempleMarker;
+        var userLocation = null;
+        var blinkInterval = null;
+
+        
+
+        var templeBlinkIcon = L.icon({
+            iconUrl: 'https://leafletjs.com/examples/custom-icons/red-marker-icon.png', 
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+        });
+
+        var userIcon = L.icon({
+            iconUrl: 'location-crosshairs-solid.svg',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+        });
+        var popularTempleIcon = L.icon({
+            iconUrl: 'om.png', // First image for popular temples
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+        });
+
+        var unpopularTempleIcon = L.icon({
+            iconUrl: 'temple.png', // Second image for less popular temples
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+        });
+
+        var popularTemples = [
+            "Ucchi Pillayar Rockfort Temple",
+            "Sri Ranganathaswamy Temple",
+            "Jambukeswarar Temple",
+            "Erumbeeswarar Temple",
+            "Vayalur Murugan Temple",
+            "Arulmigu Vekkaliyamman Temple",
+            "Arulmigu kamalavalli Nachiyar Temple",
+            "Sri Ayyappan Temple",
+            "Sri Thayumanavar Temple",
+        ];
+
+        temples.forEach(temple => {
+            let iconType = popularTemples.includes(temple.name) ? popularTempleIcon : unpopularTempleIcon;
+
+            temple.marker = L.marker([temple.lat, temple.lng], { icon: iconType })
+                .addTo(map)
+                .bindPopup(`<b>${temple.name}</b><br>Distance: ${temple.distance} km<br>
+                    <button onclick="getDirections(${temple.lat}, ${temple.lng})">Get Directions</button>`) // Tooltip on hover
+                .bindTooltip(temple.name, { permanent: false, direction: "top" });
+        });
+
+        function getUserLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            userLocation = [position.coords.latitude, position.coords.longitude];
+
+            console.log("User Location: ", userLocation); // Debugging
+
+            if (userMarker) {
+                userMarker.setLatLng(userLocation);
+            } else {
+                userMarker = L.marker(userLocation, { icon: userIcon })
+                    .addTo(map)
+                    .bindPopup("<b>You are here</b>")
+                    .openPopup();
+            }
+
+            map.setView(userLocation, 14);
+            updateTempleDistances();
+        }, function(error) {
+            console.error("Error getting location: ", error);
+            alert("Please allow location access in your browser settings.");
+        }, { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 });
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+        function getDistance(lat1, lon1, lat2, lon2) {
+            var R = 6371;
+            var dLat = (lat2 - lat1) * (Math.PI / 180);
+            var dLon = (lon2 - lon1) * (Math.PI / 180);
+            var a = 
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * 
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return (R * c).toFixed(2);
+        }
+
+        function updateTempleDistances() {
+    if (!userLocation) return;
+
+    temples.forEach(temple => {
+        temple.distance = getDistance(userLocation[0], userLocation[1], temple.lat, temple.lng);
+    });
+
+    temples.sort((a, b) => a.distance - b.distance);
+    
+    displayTemples(); // Now call displayTemples after distances are updated
+}
+
+function displayTemples() {
+    temples.forEach((temple) => {
+        let iconType = popularTemples.includes(temple.name) ? popularTempleIcon : unpopularTempleIcon;
+
+        temple.marker = L.marker([temple.lat, temple.lng], { icon: iconType })
+            .addTo(map)
+            .bindPopup(`<b>${temple.name}</b><br>Distance: ${temple.distance} km<br>
+                <button onclick="getDirections(${temple.lat}, ${temple.lng})">Get Directions</button>`)
+            .bindTooltip(temple.name, { permanent: false, direction: "top" });
+    });
+
+    let nearestTemple = temples[0]; // Get the nearest temple
+    blinkNearestTemple(nearestTemple);
+}
+
+        function blinkNearestTemple(nearestTemple) {
+            if (blinkInterval) {
+                clearInterval(blinkInterval);
+                if (nearestTempleMarker) {
+                    nearestTempleMarker.setIcon(templeIcon);
+                }
+            }
+
+            nearestTempleMarker = nearestTemple.marker;
+            let isOriginalIcon = true;
+
+            blinkInterval = setInterval(() => {
+                nearestTempleMarker.setIcon(isOriginalIcon ? templeBlinkIcon : templeIcon);
+                isOriginalIcon = !isOriginalIcon;
+            }, 500);
+        }
+
+        function getDirections(destLat, destLng) {
+            if (!userLocation) {
+                alert("Please allow location access first.");
+                getUserLocation();
+                return;
+            }
+
+            if (routeControl) {
+                map.removeControl(routeControl);
+            }
+
+            routeControl = L.Routing.control({
+                waypoints: [
+                    L.latLng(userLocation[0], userLocation[1]), 
+                    L.latLng(destLat, destLng) 
+                ],
+                routeWhileDragging: true,
+                lineOptions: {
+                    styles: [{ color: 'green', opacity: 0.7, weight: 5 }] 
+                },
+                createMarker: function(i, waypoint, n) {
+                    return L.marker(waypoint.latLng, {
+                        icon: L.icon({
+                            iconUrl: (i === 0) ? 'location-crosshairs-solid.svg' : 
+                                'https://leafletjs.com/examples/custom-icons/red-marker-icon.png',
+                            iconSize: [30, 30],
+                            iconAnchor: [15, 30]
+                        })
+                    });
+                },
+                router: L.Routing.osrmv1({
+                    serviceUrl: 'https://router.project-osrm.org/route/v1'
+                }),
+                show: true // Ensure the route panel is visible
+            }).addTo(map);
+
+            // Add a close button to the route panel
+            const routeContainer = document.querySelector('.leaflet-routing-container');
+            if (routeContainer) {
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'close-btn';
+                closeBtn.innerHTML = '×';
+                closeBtn.onclick = () => {
+                    map.removeControl(routeControl);
+                    routeControl = null;
+                };
+                routeContainer.appendChild(closeBtn);
+            }
+        }
+
+        getUserLocation();
+        setTimeout(updateTempleDistances, 2000);
+    </script>
+    <style>
+        .leaflet-routing-alt {
+            display: block !important; /* Ensure the route panel is visible */
+        }
+    </style>
+</body>
+</html>
+</div>
+<style>
+    .div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .but {
+        position: absolute;
+        top: 2%;
+        right: 3%;
+        width: 100px;
+        height: 35px;
+        color: rgb(200, 225, 219);
+        background-color: #27285C;
+        font-weight: bold;
+    }
+    .image{
+        display:flex;
+        position: absolute;
+        top:3%;
+        right:15%;
+    }
+    *{
+        font-family: "Roboto",sans-serif;
+    }
+</style>

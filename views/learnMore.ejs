@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="google_translate_element"></div>
+    <style>
+        /* Hide the Google Translate container initially */
+        #google_translate_element {
+            display: none;
+        }
+    </style>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                autoDisplay: false
+            }, 'google_translate_element');
+
+            // Hide the translation toolbar after it's loaded
+            setTimeout(function() {
+                const iframe = document.querySelector('iframe.skiptranslate');
+                if (iframe) {
+                    iframe.style.display = 'none';
+                }
+            }, 1000); // Delay to ensure the iframe is loaded
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+  <link rel="stylesheet" href="move.css" />
+  <body>
+    <section class="conatiner">
+      <div class="slider-wrapper">
+        <div class="slider">
+          <img
+            id="slider-1"
+            src="slide(1).png"
+            alt="temple-1"
+          />
+          <img
+            id="slider-2"
+            src="2.png"
+            alt="temple-2"
+          />
+          <img
+            id="slider-3"
+            src="3.png"
+            alt="temple-3"
+          />
+        </div>
+        <div class="slider-nav">
+          <a href="#slider-1"></a>
+          <a href="#slider-2"></a>
+          <a href="#slider-3"></a>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

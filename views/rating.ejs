@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Star Rating</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        transform: translateY(-5%);
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      .star-rating {
+        max-width: 500px;
+        width: 90%;
+        padding: 5%;
+        /* border: 0.1rem solid black; */
+        box-sizing: border-box;
+        background-color: #27285c;
+        border-radius: 0.5rem;
+        box-shadow: 0.2rem 0.1rem 0.2rem 0.2rem rgba(0, 0, 0, 0.376),
+          -0rem -0.1rem 0.2rem 0.2rem rgba(0, 0, 0, 0.339);
+      }
+
+      .star {
+        border: none;
+        background: none;
+        font-size: 2rem;
+        cursor: pointer;
+        color: #ffd700;
+        margin: 0 0.3rem;
+      }
+
+      textarea {
+        width: 100%;
+        border-radius: 0.5rem;
+        background-color: rgb(200, 225, 219);
+        font-size: 1rem;
+        padding: 0.5rem;
+        box-sizing: border-box;
+        color: black;
+      }
+      textarea::placeholder {
+        text-align: center;
+      }
+      #rated {
+        padding: 0.5rem;
+        font-size: 1rem;
+        font-family: "DM Sans", serif;
+        color: #27285c;
+        background-color: rgb(200, 225, 219);
+        border: none;
+        text-decoration: none;
+        border-radius: 0.1rem;
+      }
+
+      p {
+        text-align: center;
+        font-size: larger;
+        font-family: "DM Sans", serif;
+        color: rgb(200, 225, 219);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="star-rating">
+      <p>Your opinion matters</p>
+      <p>Rate your Experience</p>
+      <p>
+        <button class="star" onclick="btclick(1)">&#9734;</button>
+        <button class="star" onclick="btclick(2)">&#9734;</button>
+        <button class="star" onclick="btclick(3)">&#9734;</button>
+        <button class="star" onclick="btclick(4)">&#9734;</button>
+        <button class="star" onclick="btclick(5)">&#9734;</button>
+      </p>
+      <p>
+        <textarea
+          placeholder="give your feedback here"
+          id="review"
+          name="review"
+          rows="3"
+          cols="30"
+        ></textarea>
+      </p>
+      <p><a href="/home" id="rated">Rate</a></p>
+    </div>
+
+    <script type="text/javascript">
+      var current_rating = 0;
+      function btclick(rating) {
+        var star = document.getElementsByClassName("star");
+        var rated = document.getElementById("rated");
+        if (current_rating == rating) {
+          for (var i = 0; i < star.length; i++) {
+            star[i].innerHTML = "&#9734;";
+          }
+          current_rating = 0;
+          rated.innerHTML = "Rate";
+        } else {
+          for (var j = 0; j < star.length; j++) {
+            if (j < rating) {
+              star[j].innerHTML = "&#9733;";
+            } else {
+              star[j].innerHTML = "&#9734;";
+            }
+          }
+          current_rating = rating;
+          rated.innerHTML = "Rated " + rating + "/5";
+        }
+      }
+    </script>
+  </body>
+</html>
